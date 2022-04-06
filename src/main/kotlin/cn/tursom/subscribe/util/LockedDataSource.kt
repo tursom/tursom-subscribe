@@ -1,10 +1,8 @@
 package cn.tursom.subscribe.util
 
-import java.io.PrintWriter
 import java.sql.Connection
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
-import java.util.logging.Logger
 import javax.sql.DataSource
 
 class LockedDataSource(

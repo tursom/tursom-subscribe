@@ -3,7 +3,7 @@ package cn.tursom.subscribe.context
 import cn.tursom.core.context.ArrayContextEnv
 import cn.tursom.core.context.Context
 import cn.tursom.core.coroutine.GlobalScope
-import cn.tursom.http.client.AsyncHttpRequest
+import cn.tursom.http.client.Okhttp
 import cn.tursom.subscribe.entity.Video
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -14,9 +14,9 @@ interface VideoContext {
   companion object {
     val contextEnv = ArrayContextEnv()
     val paramsKey = contextEnv.newKey<Map<String, String>>().withDefault { emptyMap() }
-    val countKey = contextEnv.newKey<Int>().withDefault { 0 }
+    val countKey = contextEnv.newKey<Int>()
     val pageKey = contextEnv.newKey<Int>()
-    val httpClient = contextEnv.newKey<OkHttpClient>().withDefault { AsyncHttpRequest.defaultClient }
+    val httpClient = contextEnv.newKey<OkHttpClient>().withDefault { Okhttp.default }
   }
 
   suspend fun listVideos(

@@ -1,5 +1,6 @@
 package cn.tursom.subscribe.context.ktorm
 
+import cn.tursom.core.context.Context
 import cn.tursom.core.coroutine.GlobalScope
 import cn.tursom.database.ktorm.*
 import cn.tursom.subscribe.context.SubscribeContext
@@ -34,7 +35,7 @@ class KtormSubscribeContext(
     }
   }
 
-  override suspend fun updateSubscribe(uid: String, full: Boolean) = 0
+  override suspend fun updateSubscribe(uid: String, full: Boolean, ctx: Context) = 0
 
   override fun updateSubscribe(subscribes: List<Subscribe>): Int {
     var insert = 0
@@ -66,20 +67,20 @@ class KtormSubscribeContext(
   }
 
   @OptIn(ExperimentalCoroutinesApi::class)
-  override suspend fun subscribeChannel(uid: String): ReceiveChannel<Subscribe> = GlobalScope.produce {
-    listSubscribe(uid).forEach {
+  override suspend fun subscribeChannel(uid: String, ctx: Context): ReceiveChannel<Subscribe> = GlobalScope.produce {
+    listSubscribe(uid, ).forEach {
       send(it)
     }
   }
 
-  override suspend fun listSubscribe(uid: String) = database.from<Subscribe>()
+  override suspend fun listSubscribe(uid: String, ctx: Context) = database.from<Subscribe>()
     .select()
     .where {
       Subscribe::uid eq uid
     }
     .toList<Subscribe>()
 
-  override suspend fun listSubscribe(uid: String, page: Int, pageSize: Int) = database.from<Subscribe>()
+  override suspend fun listSubscribe(uid: String, page: Int, pageSize: Int, ctx: Context) = database.from<Subscribe>()
     .select()
     .where {
       Subscribe::uid eq uid

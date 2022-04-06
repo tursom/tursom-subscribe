@@ -2,9 +2,7 @@ package cn.tursom.subscribe.context.ktorm
 
 import cn.tursom.subscribe.context.GlobalContext
 import cn.tursom.subscribe.context.bilibili.BilibiliSubscribeContext
-import cn.tursom.subscribe.context.TickerContextImpl
 import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
@@ -37,7 +35,7 @@ internal class KtormSubscribeContextTest {
   @Test
   fun updateSubscribe() {
     val subscribe = runBlocking {
-      httpCtx.listSubscribe(uid)
+      httpCtx.listSubscribe(uid, )
     }
     ctx.updateSubscribe(subscribe)
   }

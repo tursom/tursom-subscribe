@@ -5,7 +5,7 @@ import cn.tursom.core.context.Context
 import cn.tursom.core.coroutine.GlobalScope
 import cn.tursom.core.fromJsonTyped
 import cn.tursom.core.toJson
-import cn.tursom.http.client.AsyncHttpRequest
+import cn.tursom.http.client.getStr
 import cn.tursom.subscribe.context.TickerContext
 import cn.tursom.subscribe.context.VideoContext
 import cn.tursom.subscribe.context.bilibili.entity.Data
@@ -14,8 +14,6 @@ import cn.tursom.subscribe.entity.UserType
 import cn.tursom.subscribe.entity.Video
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.produce
-import okhttp3.OkHttpClient
-import java.net.Proxy
 
 class BilibiliVideoContext(
   private val tickerContext: TickerContext,
@@ -36,18 +34,18 @@ class BilibiliVideoContext(
     context: Context,
   ): Data<VideoList<BVideo>> {
     tickerContext.wait()
-    val videos = AsyncHttpRequest.getStr(
+    val videos = context[VideoContext.httpClient].getStr(
       "https://api.bilibili.com/x/space/arc/search",
       param = baseParam + mapOf(
         "mid" to uid,
         "ps" to pageSize.toString(),
         "pn" to page.toString(),
       ) + context[VideoContext.paramsKey],
-      client = context[VideoContext.httpClient],
     )
     try {
       val data = gson.fromJsonTyped<Data<VideoList<BVideo>>>(videos)
-      context.set(VideoContext.countKey, data.data.page.count)
+      context[VideoContext.countKey] = data.data.page.count
+      context[VideoContext.pageKey] = page
       return data
     } catch (e: Exception) {
       println(videos)
@@ -83,7 +81,6 @@ class BilibiliVideoContext(
     var total = Int.MAX_VALUE
     while ((page - 1) * pageSize < total) {
       val videos = listBilibiliVideos(uid, page, pageSize, context).data
-      context.set(VideoContext.pageKey, page)
       page++
       total = videos.page.count
       videos.list.vlist.forEach {

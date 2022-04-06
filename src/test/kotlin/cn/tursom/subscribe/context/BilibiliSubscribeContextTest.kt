@@ -2,12 +2,9 @@ package cn.tursom.subscribe.context
 
 import cn.tursom.core.toPrettyJson
 import cn.tursom.subscribe.context.bilibili.BilibiliSubscribeContext
-import cn.tursom.subscribe.context.ktorm.KtormUserContext
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
-
-import org.ktorm.database.Database
 
 internal class BilibiliSubscribeContextTest {
   private val globalContext = GlobalContext()
@@ -19,7 +16,7 @@ internal class BilibiliSubscribeContextTest {
   @Test
   fun listSubscribe() {
     runBlocking {
-      println(ctx.listSubscribe("1837471", 1, 20))
+      println(ctx.listSubscribe("1837471", 1, 20, ))
     }
   }
 
@@ -33,7 +30,7 @@ internal class BilibiliSubscribeContextTest {
   @Test
   fun subscribeChannel() {
     runBlocking {
-      println(ctx.subscribeChannel("1837471").consumeAsFlow()
+      println(ctx.subscribeChannel("1837471", ).consumeAsFlow()
         .collect {
           println(it.uname)
         })

@@ -1,9 +1,7 @@
 package cn.tursom.subscribe.context
 
 import cn.tursom.core.context.Context
-import cn.tursom.subscribe.context.CachedVideoContext.Companion.updatePageKey
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.withContext
 
@@ -15,8 +13,6 @@ class CachedVideoContext(
   companion object : Exception() {
     const val lastUpdateKey = "CachedVideoContext_lastUpdateKey"
     const val updatePageKey = "CachedVideoContext_updatePageKey"
-
-    //private fun updatePageKey(uid: String) = "CachedVideoContext_updatePageKey-$uid"
   }
 
   override suspend fun lastUpdate(uid: String) = withContext(Dispatchers.IO) {

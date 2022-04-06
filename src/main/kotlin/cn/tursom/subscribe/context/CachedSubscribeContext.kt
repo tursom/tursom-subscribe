@@ -1,5 +1,6 @@
 package cn.tursom.subscribe.context
 
+import cn.tursom.core.context.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.withContext
@@ -18,11 +19,11 @@ class CachedSubscribeContext(
     kvContext[lastUpdateKey, uid]?.toLong() ?: 0
   }
 
-  override suspend fun updateSubscribe(uid: String, full: Boolean): Int {
+  override suspend fun updateSubscribe(uid: String, full: Boolean, ctx: Context): Int {
     var update = 0
     try {
       var failure = 0
-      httpSubscribeContext.subscribeChannel(uid)
+      httpSubscribeContext.subscribeChannel(uid, )
         .consumeAsFlow()
         .collect {
           userContext.setUname(it.uid, it.uname ?: "")

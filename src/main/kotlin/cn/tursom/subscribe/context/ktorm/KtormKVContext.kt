@@ -5,8 +5,6 @@ import cn.tursom.database.ktorm.annotations.KtormTableName
 import cn.tursom.subscribe.context.KVContext
 import org.ktorm.database.Database
 import org.ktorm.dsl.where
-import org.sqlite.SQLiteErrorCode
-import org.sqlite.SQLiteException
 
 class KtormKVContext(
   private val database: Database,
