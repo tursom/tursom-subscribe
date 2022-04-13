@@ -9,7 +9,7 @@ import kotlinx.coroutines.runBlocking
 
 class TickerContextImpl @OptIn(ObsoleteCoroutinesApi::class) constructor(
   override val ticker: ReceiveChannel<Unit> = fastSlowTicker(
-    fastTicker = bufferTicker(500, 5),
+    fastTicker = bufferTicker(500, 3),
     slowTicker = ticker(5000),
   ),
 ) : TickerContext {

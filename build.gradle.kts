@@ -1,4 +1,5 @@
 import cn.tursom.gradle.*
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
@@ -50,11 +51,19 @@ dependencies {
   ts_coroutine
   ts_ktorm
   ts_log
+  ts_web_netty_client
+  ts_web_okhttp
 
   implementation(group = "org.xerial", name = "sqlite-jdbc", version = "3.36.0.3")
   implementation("org.ktorm:ktorm-support-sqlite:3.4.1")
   implementation(group = "com.google.code.gson", name = "gson", version = "2.8.9")
   implementation("com.squareup.okhttp3:okhttp:4.9.3")
+
+  val brotliVersion = "1.7.1"
+  implementation(group = "com.aayushatharva.brotli4j", name = "brotli4j", version = brotliVersion)
+  listOf("windows-x86_64", "osx-x86_64", "linux-aarch64", "linux-x86_64").forEach { system ->
+    implementation(group = "com.aayushatharva.brotli4j", name = "native-$system", version = brotliVersion)
+  }
   testImplementation(kotlin("test"))
 }
 

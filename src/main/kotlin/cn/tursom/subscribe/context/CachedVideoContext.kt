@@ -33,7 +33,7 @@ class CachedVideoContext(
           .collect {
             val updateSubscribe = dbVideoContext.saveVideo(it)
             update += updateSubscribe
-            if (updateSubscribe == 0) {
+            if (updateSubscribe != 0) {
               return@collect
             }
             failure++

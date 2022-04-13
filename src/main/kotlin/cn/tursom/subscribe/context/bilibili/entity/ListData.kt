@@ -1,7 +1,7 @@
 package cn.tursom.subscribe.context.bilibili.entity
 
 data class ListData<T>(
-  val list: List<T>,
-  val re_version: Int,
-  val total: Int,
+  val list: List<T> = emptyList(),
+  val re_version: Int = 0,
+  val total: Int = 0,
 )

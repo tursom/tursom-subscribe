@@ -4,14 +4,15 @@ import cn.tursom.core.Utils.gson
 import cn.tursom.core.context.Context
 import cn.tursom.core.coroutine.GlobalScope
 import cn.tursom.core.fromJsonTyped
-import cn.tursom.core.toJson
 import cn.tursom.http.client.getStr
 import cn.tursom.subscribe.context.SubscribeContext
 import cn.tursom.subscribe.context.TickerContext
 import cn.tursom.subscribe.context.UserContext
 import cn.tursom.subscribe.context.bilibili.entity.Data
+import cn.tursom.subscribe.context.bilibili.entity.Follower
 import cn.tursom.subscribe.context.bilibili.entity.ListData
 import cn.tursom.subscribe.entity.Subscribe
+import cn.tursom.subscribe.entity.UserType
 import cn.tursom.subscribe.exception.UnauthorizedUserException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -37,7 +38,8 @@ class BilibiliSubscribeContext(
     pageSize: Int,
     ctx: Context = SubscribeContext.contextEnv.emptyContext(),
   ): Data<ListData<Follower>> {
-    val cookie = userContext.getCookie(uid) ?: throw UnauthorizedUserException("unauthorized user $uid")
+    val cookie = userContext.getCookie(UserType.BILIBILI, uid, "api.bilibili.com")
+      ?: throw UnauthorizedUserException("unauthorized user $uid")
     tickerContext.wait()
     var subscribes = ctx[SubscribeContext.httpClient].getStr(
       "https://api.bilibili.com/x/relation/followings",
@@ -105,63 +107,5 @@ class BilibiliSubscribeContext(
 
   override suspend fun listSubscribe(uid: String, page: Int, pageSize: Int, ctx: Context) =
     followings(uid, page, pageSize, ctx).data.list.map { it.toSubscribe(uid) }
-
-  data class Follower(
-    val attribute: Int,
-    val contract_info: ContractInfo,
-    val face: String,
-    val face_nft: Int,
-    val mid: Int,
-    val mtime: Int,
-    val official_verify: OfficialVerify,
-    val sign: String,
-    val special: Int,
-    val tag: Any,
-    val uname: String,
-    val vip: Vip,
-  ) {
-    fun toSubscribe(uid: String) = Subscribe(
-      uid = uid,
-      mid = mid.toString(),
-      uname = uname,
-      raw = toJson(),
-    )
-
-    data class OfficialVerify(
-      val desc: String,
-      val type: Int,
-    )
-
-    data class ContractInfo(
-      val is_contract: Boolean,
-      val is_contractor: Boolean,
-      val ts: Int,
-      val user_attr: Int,
-    )
-
-    data class Vip(
-      val accessStatus: Int,
-      val avatar_subscript: Int,
-      val avatar_subscript_url: String,
-      val dueRemark: String,
-      val label: Label,
-      val nickname_color: String,
-      val themeType: Int,
-      val vipDueDate: Long,
-      val vipStatus: Int,
-      val vipStatusWarn: String,
-      val vipType: Int,
-    ) {
-      data class Label(
-        val bg_color: String,
-        val bg_style: Int,
-        val border_color: String,
-        val label_theme: String,
-        val path: String,
-        val text: String,
-        val text_color: String,
-      )
-    }
-  }
 }
 
